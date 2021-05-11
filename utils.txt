@@ -1,0 +1,35 @@
+git rm -r --cached .
+git add .
+git commit -m ".gitignore is now working"
+git push
+
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+
+pip install rasa
+pip install spacy
+pip install rasa-x -i https://pypi.rasa.com/simple
+python -m spacy download en_core_web_md
+
+
+python -m spacy link en_core_web_md en_core_web_md
+python -m rasa train nlu --nlu nlu.md
+python -m rasa shell nlu
+python -m spacy init vectors en word2vec/word2vec_shopping.txt.gz init_vectors --name spacy.word2vec.model 
+pip3 install rasa-x --extra-index-url https://pypi.rasa.com/simple
+
+
+rasa run actions --port 5056
+rasa init
+rasa train
+
+rasa shell nlu
+rasa x
+rasa run actions
+
+
+ 
+
+
