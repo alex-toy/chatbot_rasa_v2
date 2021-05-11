@@ -1,20 +1,54 @@
+version: '2.0'
+config:
+  store_entities_as_slots: true
 session_config:
-  session_expiration_time: 60.0
+  session_expiration_time: 60
   carry_over_slots_to_new_session: true
-
 intents:
-- greet
-- buy_phone_laptop
-- latest_news_phones_laptops
-- give_information
-- goodbye
-
+- greet:
+    use_entities: true
+- buy_phone_laptop:
+    use_entities: true
+- latest_news_phones_laptops:
+    use_entities: true
+- give_information:
+    use_entities: true
+- goodbye:
+    use_entities: true
+- budget_available:
+    use_entities: true
 entities:
 - category
-- RAM
 - battery
 - camera
-
+- budget
+- ram
+slots:
+  battery:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
+  budget:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
+  camera:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
+  category:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
+  ram:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
 responses:
   utter_how_can_I_help:
   - text: Welcome. I'm your shopping bot. I can help you with ffinding a phone or laptop and providing latest news for them!
@@ -26,7 +60,6 @@ responses:
   - text: How much battery capacity are you looking for in the mobile?
   utter_goodbye:
   - text: It was nice talking to you! Goodbye!
-
 actions:
 - utter_how_can_I_help
 - utter_ask_ram
@@ -35,3 +68,5 @@ actions:
 - utter_goodbye
 - action_search
 - action_show_latest_news
+forms: {}
+e2e_actions: []
