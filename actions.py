@@ -64,6 +64,8 @@ class ProductSearchForm(FormAction):
         """Validate num_people value."""
 
         ram_int = int(re.findall(r'[0-9]+',value)[0])
+        dispatcher.utter_message(response=f"ram_int : {int(ram_int)}")
+        print(ram_int)
         if ram_int < 50:
             return {"ram":ram_int}
         else:
