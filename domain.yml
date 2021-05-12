@@ -1,68 +1,37 @@
-version: '2.0'
-config:
-  store_entities_as_slots: true
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
-- greet:
-    use_entities: true
-- buy_phone_laptop:
-    use_entities: true
-- latest_news_phones_laptops:
-    use_entities: true
-- give_information:
-    use_entities: true
-- goodbye:
-    use_entities: true
-- budget_available:
-    use_entities: true
+- greet
+- buy_phone_laptop
+- latest_news_phones_laptops
+- give_information
+- goodbye
+- budget_available
+- out_of_scope
 entities:
 - category
 slots:
   battery:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
   battery_backup:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
   budget:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
   camera:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
   category:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
   ram:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
   requested_slot:
-    type: rasa.shared.core.slots.UnfeaturizedSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: false
+    type: unfeaturized
   storage_capacity:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    type: text
 responses:
   utter_how_can_I_help:
-  - text: Welcome. I'm your shopping bot. I can help you with finding a phone or laptop and providing latest news for them.
+  - text: Welcome. I'm your shopping bot. I can help you with finding a phone or laptop
+      and providing latest news for them.
   utter_ask_ram:
   - text: How much GB RAM are you looking for?
   utter_ask_camera:
@@ -89,6 +58,19 @@ responses:
   - text: Please enter correct storage capacity in GBs.
   utter_goodbye:
   - text: It was great talking to you! Goodbye!!
+  utter_fallback:
+  - buttons:
+    - payload: /buy_phone_laptop{"category":"phone"}
+      title: Buy Phone
+    - payload: /buy_phone_laptop{"category":"laptop"}
+      title: Buy Laptop
+    - payload: /latest_news_phones_laptops{"category":"phone"}
+      title: Mobile news
+    - payload: /latest_news_phones_laptops{"category":"laptop"}
+      title: Laptop news
+    - payload: /goodbye
+      title: Goodbye
+    text: Sorry! I couldn't get you! Please use one of the following options.
 actions:
 - utter_how_can_I_help
 - utter_ask_ram
@@ -106,10 +88,7 @@ actions:
 - utter_ask_storage_capacity
 - utter_wrong_battery_backup
 - utter_wrong_storage_capacity
-- utter_battery_backup
-- utter_storage_capacity
-- product_search_form
+- utter_fallback
+- action_my_fallback
 forms:
-  product_search_form:
-    required_slots: {}
-e2e_actions: []
+- product_search_form

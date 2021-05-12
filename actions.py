@@ -3,6 +3,7 @@ from typing import Any, Text, Dict,Union, List ## Datatypes
 from rasa_sdk import Action, Tracker  ##
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormAction
+from rasa_sdk.events import SlotSet, UserUtteranceReverted
 
 import re
 
@@ -41,7 +42,6 @@ class ActionShowLatestNews(Action):
         #all caluculations are done
         dispatcher.utter_message(text='Here the latest news for your category')
 
-
         return []
 
 class ProductSearchForm(FormAction):
@@ -67,13 +67,13 @@ class ProductSearchForm(FormAction):
             - a whole message
             or a list of them, where a first match will be picked"""
 
-        return {
-            "ram":[self.from_text()],
-            "camera":[self.from_text()],
-            "battery":[self.from_text()],
-            "budget":[self.from_text()],
-            "battery_backup":[self.from_text()],
-            "storage_capacity":[self.from_text()]
+
+        return {"ram":[self.from_text()],
+        "camera":[self.from_text()],
+        "battery":[self.from_text()],
+        "budget":[self.from_text()],
+        "battery_backup":[self.from_text()],
+        "storage_capacity":[self.from_text()]
         }
 
 
@@ -85,6 +85,10 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
+        #4 GB RAM
+        # 10 GB RAM --> integers/number from this -- 10
+        # 8 | Im looking for 8 GB | 8 GB RAM
+        # Im looking for ram
         try:
             battery_backup_int = int(re.findall(r'[0-9]+',value)[0])
         except:
@@ -105,7 +109,10 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
-
+        #4 GB RAM
+        # 10 GB RAM --> integers/number from this -- 10
+        # 8 | Im looking for 8 GB | 8 GB RAM
+        # Im looking for ram
         try:
             storage_capacity_int = int(re.findall(r'[0-9]+',value)[0])
         except:
@@ -126,7 +133,10 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
-
+        #4 GB RAM
+        # 10 GB RAM --> integers/number from this -- 10
+        # 8 | Im looking for 8 GB | 8 GB RAM
+        # Im looking for ram
         try:
             ram_int = int(re.findall(r'[0-9]+',value)[0])
         except:
@@ -147,7 +157,9 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
-
+        #4 GB RAM
+        # 10 GB RAM --> integers/number from this -- 10
+        #
         try:
             camera_int = int(re.findall(r'[0-9]+',value)[0])
         except:
@@ -168,7 +180,9 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
-
+        #4 GB RAM
+        # 10 GB RAM --> integers/number from this -- 10
+        # i want the ram
         try:
             budget_int = int(re.findall(r'[0-9]+',value)[0])
         except:
@@ -189,7 +203,9 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
-
+        #4 GB RAM
+        # 10 GB RAM --> integers/number from this -- 10
+        #
         try:
             battery_int = int(re.findall(r'[0-9]+',value)[0])
         except:
@@ -218,5 +234,20 @@ class ProductSearchForm(FormAction):
         elif tracker.get_slot('category') == 'laptop':
             dispatcher.utter_message(text="Please find your searched items here......... Laptops..")
 
+        return []
+
+class MyFallback(Action):
+
+    def name(self) -> Text:
+        return "action_my_fallback"
+
+    def run(self, dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        #Calling the DB
+        #calling an API
+        # do anything
+        #all caluculations are done
+        dispatcher.utter_message(template="utter_fallback")
 
         return []

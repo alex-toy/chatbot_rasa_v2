@@ -32,6 +32,20 @@
 - update me on the [mobile](category) news
 - show me the latest news for [mobiles](category)
 
+## intent:out_of_scope
+- blablablablalblab
+- asdasdasdasd
+- hmmmmmm
+- hahahha
+- ..
+- where are you
+- what do you
+- ..
+- what else can you do
+- whats the weather update
+- im sleeping
+
+
 ## intent:goodbye
 - goodbye
 - ciao
