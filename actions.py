@@ -1,11 +1,10 @@
-import re
-
-from typing import Any, Text, Dict, List ## Datatypes
+from typing import Any, Text, Dict,Union, List ## Datatypes
 
 from rasa_sdk import Action, Tracker  ##
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormAction
 
+import re
 
 class ActionSearch(Action):
 
@@ -15,17 +14,18 @@ class ActionSearch(Action):
     def run(self, dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
+        #Calling the DB
+        #calling an API
+        # do anything
+        #all caluculations are done
         camera = tracker.get_slot('camera')
-        ram = tracker.get_slot('ram')
+        ram = tracker.get_slot('RAM')
         battery = tracker.get_slot('battery')
-        
-        dispatcher.utter_message(text='The features you entered: ' + str(camera) + ", " + str(ram) + ", " + str(battery))
+
         dispatcher.utter_message(text='Here are your search results')
-        
+        dispatcher.utter_message(text='The features you entered: ' + str(camera) + ", " + str(ram) + ", " + str(battery))
         return []
-
-
+########################
 
 class ActionShowLatestNews(Action):
 
@@ -35,24 +35,88 @@ class ActionShowLatestNews(Action):
     def run(self, dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
+        #Calling the DB
+        #calling an API
+        # do anything
+        #all caluculations are done
         dispatcher.utter_message(text='Here the latest news for your category')
+
+
         return []
-
-
 
 class ProductSearchForm(FormAction):
     """Example of a custom form action"""
 
     def name(self) -> Text:
+        """Unique identifier of the form"""
+
         return "product_search_form"
 
-    
     @staticmethod
     def required_slots(tracker: Tracker) -> List[Text]:
-        return ["ram","battery","camera","budget"]
+        """A list of required slots that the form has to fill"""
+        if tracker.get_slot('category') == 'phone':
+            return ["ram","battery","camera","budget"]
+        elif tracker.get_slot('category') == 'laptop':
+            return ["ram","battery_backup","storage_capacity","budget"]
+
+    def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
+        """A dictionary to map required slots to
+            - an extracted entity
+            - intent: value pairs
+            - a whole message
+            or a list of them, where a first match will be picked"""
+
+        return {
+            "ram":[self.from_text()],
+            "camera":[self.from_text()],
+            "battery":[self.from_text()],
+            "budget":[self.from_text()],
+            "battery_backup":[self.from_text()],
+            "storage_capacity":[self.from_text()]
+        }
 
 
+    def validate_battery_backup(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        """Validate num_people value."""
+        try:
+            battery_backup_int = int(re.findall(r'[0-9]+',value)[0])
+        except:
+            battery_backup_int = 500000
+        #Query the DB and check the max value, that way it can be dynamic
+        if battery_backup_int < 50:
+            return {"battery_backup":battery_backup_int}
+        else:
+            dispatcher.utter_message(template="utter_wrong_battery_backup")
+
+            return {"battery_backup":None}
+
+    def validate_storage_capacity(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        """Validate num_people value."""
+
+        try:
+            storage_capacity_int = int(re.findall(r'[0-9]+',value)[0])
+        except:
+            storage_capacity_int = 500000
+        #Query the DB and check the max value, that way it can be dynamic
+        if storage_capacity_int < 2000:
+            return {"storage_capacity":storage_capacity_int}
+        else:
+            dispatcher.utter_message(template="utter_wrong_storage_capacity")
+
+            return {"storage_capacity":None}
 
     def validate_ram(
         self,
@@ -63,34 +127,17 @@ class ProductSearchForm(FormAction):
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
 
-        ram_int = int(re.findall(r'[0-9]+',value)[0])
-        dispatcher.utter_message(response=f"ram_int : {int(ram_int)}")
-        print(ram_int)
+        try:
+            ram_int = int(re.findall(r'[0-9]+',value)[0])
+        except:
+            ram_int = 500000
+        #Query the DB and check the max value, that way it can be dynamic
         if ram_int < 50:
             return {"ram":ram_int}
         else:
-            dispatcher.utter_message(response="utter_wrong_ram")
+            dispatcher.utter_message(template="utter_wrong_ram")
+
             return {"ram":None}
-
-
-
-    def validate_battery(
-        self,
-        value: Text,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
-        """Validate num_people value."""
-
-        battery_int = int(re.findall(r'[0-9]+',value)[0])
-        if battery_int <= 5000:
-            return {"battery":battery_int}
-        else:
-            dispatcher.utter_message(response="utter_wrong_battery")
-            return {"battery":None}
-
-
 
     def validate_camera(
         self,
@@ -101,14 +148,17 @@ class ProductSearchForm(FormAction):
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
 
-        camera_int = int(re.findall(r'[0-9]+',value)[0])
+        try:
+            camera_int = int(re.findall(r'[0-9]+',value)[0])
+        except:
+            camera_int = 500000
+        #Query the DB and check the max value, that way it can be dynamic
         if camera_int < 150:
             return {"camera":camera_int}
         else:
-            dispatcher.utter_message(response="utter_wrong_camera")
+            dispatcher.utter_message(template="utter_wrong_camera")
+
             return {"camera":None}
-
-
 
     def validate_budget(
         self,
@@ -119,15 +169,42 @@ class ProductSearchForm(FormAction):
     ) -> Dict[Text, Any]:
         """Validate num_people value."""
 
-        budget_int = int(re.findall(r'[0-9]+',value)[0])
+        try:
+            budget_int = int(re.findall(r'[0-9]+',value)[0])
+        except:
+            budget_int = 500000
+        #Query the DB and check the max value, that way it can be dynamic
         if budget_int < 4000:
             return {"budget":budget_int}
         else:
-            dispatcher.utter_message(response="utter_wrong_budget")
+            dispatcher.utter_message(template="utter_wrong_budget")
+
             return {"budget":None}
 
+    def validate_battery(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        """Validate num_people value."""
+
+        try:
+            battery_int = int(re.findall(r'[0-9]+',value)[0])
+        except:
+            battery_int = 500000
+        #Query the DB and check the max value, that way it can be dynamic
+        if battery_int < 8000:
+            return {"battery":battery_int}
+        else:
+            dispatcher.utter_message(template="utter_wrong_battery")
+
+            return {"battery":None}
 
 
+    
+    # USED FOR DOCS: do not rename without updating in docs
     def submit(
         self,
         dispatcher: CollectingDispatcher,
@@ -135,83 +212,11 @@ class ProductSearchForm(FormAction):
         domain: Dict[Text, Any],
     ) -> List[Dict]:
 
-        camera = tracker.get_slot('camera')
-        ram = tracker.get_slot('ram')
-        battery = tracker.get_slot('battery')
-        budget = tracker.get_slot('budget')
+        if tracker.get_slot('category') == 'phone':
+            dispatcher.utter_message(text="Please find your searched items here......... Phones..")
 
-        message = f"You have chosen : camera : {camera} - ram : {ram} - battery : {battery}- budget : {budget}"
+        elif tracker.get_slot('category') == 'laptop':
+            dispatcher.utter_message(text="Please find your searched items here......... Laptops..")
 
-        dispatcher.utter_message(text=message)
-
-        dispatcher.utter_message(text="Please find your searched items here.........")
 
         return []
-
-    
-
-class SoftwareSearchForm(FormAction):
-    """Example of a custom form action"""
-
-    def name(self) -> Text:
-        return "software_search_form"
-
-    
-    @staticmethod
-    def required_slots(tracker: Tracker) -> List[Text]:
-        return ["client_type","techno"]
-
-
-
-    def validate_client_type(
-        self,
-        value: Text,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
-        """Validate client_type value."""
-
-        if value in ['particular', 'enterprise']:
-            return {"client_type":value}
-        else:
-            dispatcher.utter_message(response="utter_wrong_client_type")
-            return {"client_type" : None}
-
-
-
-    def validate_techno(
-        self,
-        value: Text,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
-        """Validate techno value."""
-
-        if value in ['java', 'node.js']:
-            return {"techno" : value}
-        else:
-            dispatcher.utter_message(response="utter_wrong_techno")
-            return {"techno" : None}
-
-    
-    def submit(
-        self,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> List[Dict]:
-
-        client_type = tracker.get_slot('client_type')
-        techno = tracker.get_slot('techno')
-
-        message = f"You have chosen : client_type : {client_type} - techno : {techno}."
-
-        dispatcher.utter_message(text=message)
-
-        dispatcher.utter_message(text="We will be more than happy to work for you.")
-
-        return []
-
-    
