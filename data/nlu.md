@@ -63,6 +63,14 @@
 - [5000 mah](battery)
 - [3000 mah](battery)
 - I want [3500 mah](battery)
+- I'm a [particular](client_type)
+- [particular](client_type)
+- I'm a [enterprise](client_type)
+- [enterprise](client_type)
+- I want the application to be made in [java](techno)
+- I want a [java](techno) application
+- I want the application to be made in [node.js](techno)
+- I want a [node.js](techno) application
 
 ## intent:budget_available
 - my budget is around [400 usd](budget)
@@ -70,6 +78,20 @@
 - my total spending on the phone can be [250 usd](budget)
 - I can shell out approx [450 usd](budget)
 - well its around [500 usd](budget)
+
+## intent:want_sofware
+- I would like a [accountancy](software_type) software
+- I wanted to purchase a [accountancy](software_type) software
+- Can you show me your [accountancy](software_type) software
+- Can you suggest an [accountancy](software_type) software
+- I was looking for an [accountancy](software_type) software
+- I would like a [ERP](software_type) software
+- I wanted to purchase a [ERP](software_type) software
+- Can you show me your [ERP](software_type) software
+- Can you suggest an [ERP](software_type) software
+- I was looking for an [ERP](software_type) software
+
+
 
 ## synonym:phone
 - mobile

@@ -17,12 +17,19 @@ intents:
     use_entities: true
 - budget_available:
     use_entities: true
+- want_sofware:
+    use_entities: true
+- give_information_application:
+    use_entities: true
 entities:
 - category
 - battery
 - camera
 - budget
 - ram
+- client_type
+- techno
+- software_type
 slots:
   battery:
     type: rasa.shared.core.slots.TextSlot
@@ -49,6 +56,21 @@ slots:
     initial_value: null
     auto_fill: true
     influence_conversation: true
+  client_type:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
+  techno:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
+  software_type:
+    type: rasa.shared.core.slots.TextSlot
+    initial_value: null
+    auto_fill: true
+    influence_conversation: true
 responses:
   utter_how_can_I_help:
   - text: Welcome. I'm your shopping bot. I can help you with ffinding a phone or laptop and providing latest news for them!
@@ -58,15 +80,66 @@ responses:
   - text: What megapixel camera are you looking for?
   utter_ask_battery:
   - text: How much battery capacity are you looking for in the mobile?
+  utter_ask_budget:
+  - text: What is your budget?
+  utter_ask_client_type:
+  - text: What kind of client are you? particular or enterprise.
+  utter_wrong_client_type:
+  - text: You should say either particular or enterprise.
+  utter_ask_techno:
+  - text: What technology do you want your application? java  or node.js.
+  utter_wrong_techno:
+  - text: We have either java  or node.js.
+  utter_wrong_budget:
+  - text: Please enter the budget in USD and below 4000.
+  utter_wrong_ram:
+  - text: Please enter the correct ram value.
+  utter_wrong_battery:
+  - text: Please enter the correct value for battery.
+  utter_wrong_camera:
+  - text: PLease enter the value for camera.
   utter_goodbye:
   - text: It was nice talking to you! Goodbye!
 actions:
 - utter_how_can_I_help
+- sofware_search_form
 - utter_ask_ram
+- utter_wrong_ram
 - utter_ask_camera
+- utter_wrong_camera
 - utter_ask_battery
+- utter_wrong_battery
+- utter_ask_budget
+- utter_wrong_budget
+- product_search_form
+- utter_ask_client_type
+- utter_wrong_client_type
+- utter_ask_techno
+- utter_wrong_techno
 - utter_goodbye
 - action_search
 - action_show_latest_news
-forms: {}
+forms:
+  product_search_form:
+    required_slots:
+      battery:
+      - entity: battery
+        type: from_entity
+      budget:
+      - entity: budget
+        type: from_entity
+      camera:
+      - entity: camera
+        type: from_entity
+      ram:
+      - entity: ram
+        type: from_entity
+  software_search_form:
+    required_slots:
+      client_type:
+      - entity: client_type
+        type: from_entity
+      techno:
+      - entity: techno
+        type: from_entity
 e2e_actions: []
