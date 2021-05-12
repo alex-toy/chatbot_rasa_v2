@@ -79,7 +79,7 @@
 - I can shell out approx [450 usd](budget)
 - well its around [500 usd](budget)
 
-## intent:want_sofware
+## intent:want_software
 - I would like a [accountancy](software_type) software
 - I wanted to purchase a [accountancy](software_type) software
 - Can you show me your [accountancy](software_type) software

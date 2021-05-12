@@ -152,7 +152,7 @@ class SoftwareSearchForm(FormAction):
     """Example of a custom form action"""
 
     def name(self) -> Text:
-        return "sofware_search_form"
+        return "software_search_form"
 
     
     @staticmethod
@@ -170,8 +170,8 @@ class SoftwareSearchForm(FormAction):
     ) -> Dict[Text, Any]:
         """Validate client_type value."""
 
-        if client_type in ['particular', 'enterprise']:
-            return {"client_type":client_type}
+        if value in ['particular', 'enterprise']:
+            return {"client_type":value}
         else:
             dispatcher.utter_message(response="utter_wrong_client_type")
             return {"client_type" : None}
@@ -187,8 +187,8 @@ class SoftwareSearchForm(FormAction):
     ) -> Dict[Text, Any]:
         """Validate techno value."""
 
-        if techno in ['java', 'node.js']:
-            return {"techno" : techno}
+        if value in ['java', 'node.js']:
+            return {"techno" : value}
         else:
             dispatcher.utter_message(response="utter_wrong_techno")
             return {"techno" : None}
@@ -208,7 +208,7 @@ class SoftwareSearchForm(FormAction):
 
         dispatcher.utter_message(text=message)
 
-        dispatcher.utter_message(text="Please find your searched items here.........")
+        dispatcher.utter_message(text="We will be more than happy to work for you.")
 
         return []
 

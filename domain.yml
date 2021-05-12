@@ -17,9 +17,7 @@ intents:
     use_entities: true
 - budget_available:
     use_entities: true
-- want_sofware:
-    use_entities: true
-- give_information_application:
+- want_software:
     use_entities: true
 entities:
 - category
@@ -102,7 +100,7 @@ responses:
   - text: It was nice talking to you! Goodbye!
 actions:
 - utter_how_can_I_help
-- sofware_search_form
+- software_search_form
 - utter_ask_ram
 - utter_wrong_ram
 - utter_ask_camera
